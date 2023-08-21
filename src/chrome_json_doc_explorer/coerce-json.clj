@@ -1046,21 +1046,31 @@
 (defn type->simple_type [type]
   (let [t (get type "type")
         name (get type "name")
-        declaration (get type "declaration")]
-    (cond (and (not (nil? declaration))
-               (= "__type" (get-in declaration ["declaration" "name"])))
-          "object"
+        declaration-name (get-in type ["declaration" "name"])]
+    (cond (= "__type" declaration-name) "object"
           (= name "number") "integer"
           (= name "string") "string"
           (= name "any") "any"
           (= name "boolean" "boolean") "boolean"
           :else
-          (str "UNKNOWN type: " type)
+          ;; (str "UNKNOWN type: " type)
+          type
           )
     ))
 
-;; test
-;; (_name-in-callback->id "chrome.tabs.onActivated.callback.activeInfo")
+;; test example
+(comment
+  (type->simple_type {"type" "reflection",
+                      "declaration"
+                      {"id" 9398,
+                       "name" "__type",
+                       "kind" 65536,
+                       "kindString" "Type literal",
+                       "flags" {"isExternal" true},
+                       "children" [],
+                       "groups" [{"title" "Properties", "kind" 1024, "children" [9399 9400]}],
+                       "sources" [{"fileName" "", "line" 29781, "character" 18}]}}
+                     ))
 
 (defmethod coerce-type :parameter [item]
   (let [name (get item "name")
