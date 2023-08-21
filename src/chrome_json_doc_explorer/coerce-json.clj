@@ -1174,7 +1174,7 @@
     {:id id
      :name name
      :simple-type simple-type
-     :parameters (->> properties
+     :properties (->> properties
                       (mapv coerce-type))
      }
     ))
