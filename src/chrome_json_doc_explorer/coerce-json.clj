@@ -1206,15 +1206,13 @@
         id (get-id item)
         callback (coerce-type (get-event-callback item))
         ]
-    {:by-name
-     {
-      :availability (when version {:version version})
-      :id id
-      :description description
-      :name name
-      :add-listener {:callback callback}
-      }
-     }
+    {:id id
+     :availability (when version {:version version})
+     :description description
+     :name name
+     :by-name
+     {:add-listener {:callback callback}
+      :name "addListener"}}
     ))
 
 
