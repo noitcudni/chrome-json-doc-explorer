@@ -968,19 +968,24 @@
     ))
 
 ;; test example
-(let [callback-data (first (get-in new-tab-on-activated-event ["_method" "parameters"]))
-      {kind-string "kindString"
-       {type "type"} "type"
-       name "name"} callback-data
-      ]
-  (coerce-type callback-data)
-  ;; callback-data
-  ;; (get-in callback-data ["_method" "parameters"])
-  ;; (my-fn callback-data)
-  )
+(comment
+  (let [callback-data (first (get-in new-tab-on-activated-event ["_method" "parameters"]))
+        {kind-string "kindString"
+         {type "type"} "type"
+         name "name"} callback-data
+        ]
+    (coerce-type callback-data)
+    ;; callback-data
+    ;; (get-in callback-data ["_method" "parameters"])
+    ;; (my-fn callback-data)
+    ))
+
+;; test example
+(coerce-type new-tab-on-activated-event)
 
 (defn get-version [{{version-str "since"} "_feature"}]
-  (Integer/parseInt (last (clojure.string/split version-str #" "))))
+  (when version-str
+    (Integer/parseInt (last (clojure.string/split version-str #" ")))))
 
 (defn get-id [{id "_pageId"}] id)
 
@@ -1199,11 +1204,13 @@
         version (get-version item)
         description (get-description item)
         id (get-id item)
-        callback (coerce-type (get-event-callback item))]
+        callback (coerce-type (get-event-callback item))
+        ]
     {:by-name
      {
-      :availability {:version version}
+      :availability (when version {:version version})
       :id id
+      :description description
       :name name
       :add-listener {:callback callback}
       }
