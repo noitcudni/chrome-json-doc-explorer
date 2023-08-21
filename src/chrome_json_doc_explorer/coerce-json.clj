@@ -1,4 +1,4 @@
-(ns chrome-json-doc-explorer.core
+(ns chrome-json-doc-explorer.coerce-json
   (:require [clojure.data.json :as json])
   )
 
@@ -945,25 +945,47 @@
 
 
 ;; test example
-(let  [data {"sources" [{"fileName" "", "line" 29640, "character" 17}],
-             "_name" "chrome.tabs.MAX_CAPTURE_VISIBLE_TAB_CALLS_PER_SECOND",
-             "_feature" {"channel" "stable", "since" "Chrome 92"},
-             "id" 9348,
-             "flags" {"isExternal" true, "isConst" true},
-             "kindString" "Variable",
-             "name" "MAX_CAPTURE_VISIBLE_TAB_CALLS_PER_SECOND",
-             "_pageId" "property-MAX_CAPTURE_VISIBLE_TAB_CALLS_PER_SECOND",
-             "kind" 32,
-             "type" {"type" "literal", "value" 2},
-             "_comment"
-             "The maximum number of times that [`captureVisibleTab`](#method-captureVisibleTab) can be called per second. [`captureVisibleTab`](#method-captureVisibleTab) is expensive and should not be called too often.",
-             "comment"
-             {"shortText"
-              "The maximum number of times that {@link captureVisibleTab} can be called per second. {@link captureVisibleTab} is expensive and should not be called too often.",
-              "tags" [{"tag" "since", "text" "Chrome 92\n"}]},
-             "_pageHref" "tabs"}]
-  ;; (get-description data)
-  (coerce-type data)
+(comment
+  (let  [data {"sources" [{"fileName" "", "line" 29640, "character" 17}],
+               "_name" "chrome.tabs.MAX_CAPTURE_VISIBLE_TAB_CALLS_PER_SECOND",
+               "_feature" {"channel" "stable", "since" "Chrome 92"},
+               "id" 9348,
+               "flags" {"isExternal" true, "isConst" true},
+               "kindString" "Variable",
+               "name" "MAX_CAPTURE_VISIBLE_TAB_CALLS_PER_SECOND",
+               "_pageId" "property-MAX_CAPTURE_VISIBLE_TAB_CALLS_PER_SECOND",
+               "kind" 32,
+               "type" {"type" "literal", "value" 2},
+               "_comment"
+               "The maximum number of times that [`captureVisibleTab`](#method-captureVisibleTab) can be called per second. [`captureVisibleTab`](#method-captureVisibleTab) is expensive and should not be called too often.",
+               "comment"
+               {"shortText"
+                "The maximum number of times that {@link captureVisibleTab} can be called per second. {@link captureVisibleTab} is expensive and should not be called too often.",
+                "tags" [{"tag" "since", "text" "Chrome 92\n"}]},
+               "_pageHref" "tabs"}]
+    ;; (get-description data)
+    (coerce-type data)
+    ))
+
+;; test example
+(let [callback-data (first (get-in new-tab-on-activated-event ["_method" "parameters"]))
+      {kind-string "kindString"
+       {type "type"} "type"
+       name "name"} callback-data
+      my-fn (fn [{kind-string "kindString"
+                  {type "type"} "type"
+                  name "name"}]
+              (cond (= kind-string "Function") :function
+                    (and (= kind-string "Variable") (= type "literal")) :property
+                    (and (= kind-string "Variable") (= type "reference")) :event
+                    (= name "callback") :callback
+                    (= kind-string "Parameter") :parameter
+                    )
+              )
+      ]
+  (coerce-type callback-data)
+  ;; (get-in callback-data ["_method" "parameters"])
+  ;; (my-fn callback-data)
   )
 
 (defn get-version [{{version-str "since"} "_feature"}]
@@ -1031,9 +1053,9 @@
           (= name "number") "integer"
           (= name "string") "string"
           (= name "any") "any"
-          (= name "boolean" "boolean")
+          (= name "boolean" "boolean") "boolean"
           :else
-          (throw (js/Error. (str "don't know what to do with" type)))
+          (str "UNKNOWN type: " type)
           )
     ))
 
@@ -1074,8 +1096,13 @@
                          (clojure.string/split #"-")
                          drop-last
                          last)
-        ]
-
+        parameters (get-in item ["_method" "parameters"])]
+    {:name name
+     :id id
+     :parent-name parent-name
+     :parameters (->> parameters
+                      (mapv coerce-type))
+     }
     ))
 
 (defmethod coerce-type :event [item]
