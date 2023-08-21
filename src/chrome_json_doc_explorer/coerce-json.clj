@@ -4,7 +4,7 @@
 
 
 
-k(comment
+(comment
   ;; ----------------- a variable in the old json ----------------- ;;
   {"properties" [],
    "returns" nil,
@@ -282,212 +282,118 @@ k(comment
 ; ---- new event ---
 (comment
   (def new-tab-on-activated-event
-    {
-     "id": 9394,
-     "name": "onActivated",
-     "kind": 32,
-     "kindString": "Variable",
-     "flags": {
-               "isExternal": true,
-               "isConst": true
-               },
-     "comment": {
-                 "shortText": "Fires when the active tab in a window changes. Note that the tab's URL may not be set at the time this event fired, but you can listen to onUpdated events so as to be notified when a URL is set."
-                 },
-     "sources": [
-                 {
-                  "fileName": "",
-                  "line": 29780,
-                  "character": 17
-                  }
-                 ],
-     "type": {
-              "type": "reference",
-              "id": 3837,
-              "typeArguments": [
-                                {
-                                 "type": "reflection",
-                                 "declaration": {
-                                                 "id": 9395,
-                                                 "name": "__type",
-                                                 "kind": 65536,
-                                                 "kindString": "Type literal",
-                                                 "flags": {
-                                                           "isExternal": true
-                                                           },
-                                                 "sources": [
-                                                             {
-                                                              "fileName": "",
-                                                              "line": 29780,
-                                                              "character": 43
-                                                              }
-                                                             ],
-                                                 "signatures": []
-                                                 }
-                                 }
-                                ],
-              "qualifiedName": "chrome.events.Event",
-              "package": "chrome-types",
-              "name": "events.Event"
-              },
-     "_name": "chrome.tabs.onActivated",
-     "_pageHref": "tabs",
-     "_event": {},
-     "_method": {
-                 "parameters": [
-                                {
-                                 "id": -1,
-                                 "name": "callback",
-                                 "kind": 32768,
-                                 "flags": {},
-                                 "type": {
-                                          "type": "reflection",
-                                          "declaration": {
-                                                          "id": 9395,
-                                                          "name": "__type",
-                                                          "kind": 65536,
-                                                          "kindString": "Type literal",
-                                                          "flags": {
-                                                                    "isExternal": true
-                                                                    },
-                                                          "sources": [
-                                                                      {
-                                                                       "fileName": "",
-                                                                       "line": 29780,
-                                                                       "character": 43
-                                                                       }
-                                                                      ],
-                                                          "signatures": []
-                                                          }
-                                          },
-                                 "_name": "chrome.tabs.onActivated.callback",
-                                 "_pageHref": "tabs",
-                                 "_method": {
-                                             "parameters": [
-                                                            {
-                                                             "id": 9397,
-                                                             "name": "activeInfo",
-                                                             "kind": 32768,
-                                                             "kindString": "Parameter",
-                                                             "flags": {
-                                                                       "isExternal": true
-                                                                       },
-                                                             "type": {
-                                                                      "type": "reflection",
-                                                                      "declaration": {
-                                                                                      "id": 9398,
-                                                                                      "name": "__type",
-                                                                                      "kind": 65536,
-                                                                                      "kindString": "Type literal",
-                                                                                      "flags": {
-                                                                                                "isExternal": true
-                                                                                                },
-                                                                                      "children": [],
-                                                                                      "groups": [
-                                                                                                 {
-                                                                                                  "title": "Properties",
-                                                                                                  "kind": 1024,
-                                                                                                  "children": [
-                                                                                                               9399,
-                                                                                                               9400
-                                                                                                               ]
-                                                                                                  }
-                                                                                                 ],
-                                                                                      "sources": [
-                                                                                                  {
-                                                                                                   "fileName": "",
-                                                                                                   "line": 29781,
-                                                                                                   "character": 18
-                                                                                                   }
-                                                                                                  ]
-                                                                                      }
-                                                                      },
-                                                             "_name": "chrome.tabs.onActivated.callback.activeInfo",
-                                                             "_pageHref": "tabs",
-                                                             "_type": {
-                                                                       "properties": [
-                                                                                      {
-                                                                                       "id": 9399,
-                                                                                       "name": "tabId",
-                                                                                       "kind": 1024,
-                                                                                       "kindString": "Property",
-                                                                                       "flags": {
-                                                                                                 "isExternal": true
-                                                                                                 },
-                                                                                       "comment": {
-                                                                                                   "shortText": "The ID of the tab that has become active."
-                                                                                                   },
-                                                                                       "sources": [
-                                                                                                   {
-                                                                                                    "fileName": "",
-                                                                                                    "line": 29786,
-                                                                                                    "character": 8
-                                                                                                    }
-                                                                                                   ],
-                                                                                       "type": {
-                                                                                                "type": "intrinsic",
-                                                                                                "name": "number"
-                                                                                                },
-                                                                                       "_name": "chrome.tabs.onActivated.callback.activeInfo.tabId",
-                                                                                       "_pageHref": "tabs",
-                                                                                       "_feature": {
-                                                                                                    "channel": "stable"
-                                                                                                    },
-                                                                                       "_pageId": "property-onActivated-callback-activeInfo-tabId",
-                                                                                       "_comment": "The ID of the tab that has become active."
-                                                                                       },
-                                                                                      {
-                                                                                       "id": 9400,
-                                                                                       "name": "windowId",
-                                                                                       "kind": 1024,
-                                                                                       "kindString": "Property",
-                                                                                       "flags": {
-                                                                                                 "isExternal": true
-                                                                                                 },
-                                                                                       "comment": {
-                                                                                                   "shortText": "The ID of the window the active tab changed inside of."
-                                                                                                   },
-                                                                                       "sources": [
-                                                                                                   {
-                                                                                                    "fileName": "",
-                                                                                                    "line": 29791,
-                                                                                                    "character": 8
-                                                                                                    }
-                                                                                                   ],
-                                                                                       "type": {
-                                                                                                "type": "intrinsic",
-                                                                                                "name": "number"
-                                                                                                },
-                                                                                       "_name": "chrome.tabs.onActivated.callback.activeInfo.windowId",
-                                                                                       "_pageHref": "tabs",
-                                                                                       "_feature": {
-                                                                                                    "channel": "stable"
-                                                                                                    },
-                                                                                       "_pageId": "property-onActivated-callback-activeInfo-windowId",
-                                                                                       "_comment": "The ID of the window the active tab changed inside of."
-                                                                                       }
-                                                                                      ]
-                                                                       },
-                                                             "_feature": {
-                                                                          "channel": "stable"
-                                                                          },
-                                                             "_pageId": "type-onActivated-callback-activeInfo"
-                                                             }
-                                                            ]
-                                             },
-                                 "_feature": {
-                                              "channel": "stable"
-                                              },
-                                 "_pageId": "method-onActivated-callback"
-                                 }
-                                ]
-                 },
-     "_feature": {
-                  "channel": "stable"
-                  },
-     "_pageId": "event-onActivated",
-     "_comment": "Fires when the active tab in a window changes. Note that the tab's URL may not be set at the time this event fired, but you can listen to onUpdated events so as to be notified when a URL is set."
-     }))
+    {"sources" [{"fileName" "", "line" 29780, "character" 17}],
+     "_name" "chrome.tabs.onActivated",
+     "_feature" {"channel" "stable"},
+     "id" 9394,
+     "flags" {"isExternal" true, "isConst" true},
+     "kindString" "Variable",
+     "_event" {},
+     "name" "onActivated",
+     "_pageId" "event-onActivated",
+     "_method"
+     {"parameters"
+      [{"_name" "chrome.tabs.onActivated.callback",
+        "_feature" {"channel" "stable"},
+        "id" -1,
+        "flags" {},
+        "name" "callback",
+        "_pageId" "method-onActivated-callback",
+        "_method"
+        {"parameters"
+         [{"_type"
+           {"properties"
+            [{"sources" [{"fileName" "", "line" 29786, "character" 8}],
+              "_name" "chrome.tabs.onActivated.callback.activeInfo.tabId",
+              "_feature" {"channel" "stable"},
+              "id" 9399,
+              "flags" {"isExternal" true},
+              "kindString" "Property",
+              "name" "tabId",
+              "_pageId" "property-onActivated-callback-activeInfo-tabId",
+              "kind" 1024,
+              "type" {"type" "intrinsic", "name" "number"},
+              "_comment" "The ID of the tab that has become active.",
+              "comment" {"shortText" "The ID of the tab that has become active."},
+              "_pageHref" "tabs"}
+             {"sources" [{"fileName" "", "line" 29791, "character" 8}],
+              "_name" "chrome.tabs.onActivated.callback.activeInfo.windowId",
+              "_feature" {"channel" "stable"},
+              "id" 9400,
+              "flags" {"isExternal" true},
+              "kindString" "Property",
+              "name" "windowId",
+              "_pageId" "property-onActivated-callback-activeInfo-windowId",
+              "kind" 1024,
+              "type" {"type" "intrinsic", "name" "number"},
+              "_comment" "The ID of the window the active tab changed inside of.",
+              "comment"
+              {"shortText"
+               "The ID of the window the active tab changed inside of."},
+              "_pageHref" "tabs"}]},
+           "_name" "chrome.tabs.onActivated.callback.activeInfo",
+           "_feature" {"channel" "stable"},
+           "id" 9397,
+           "flags" {"isExternal" true},
+           "kindString" "Parameter",
+           "name" "activeInfo",
+           "_pageId" "type-onActivated-callback-activeInfo",
+           "kind" 32768,
+           "type"
+           {"type" "reflection",
+            "declaration"
+            {"id" 9398,
+             "name" "__type",
+             "kind" 65536,
+             "kindString" "Type literal",
+             "flags" {"isExternal" true},
+             "children" [],
+             "groups"
+             [{"title" "Properties", "kind" 1024, "children" [9399 9400]}],
+             "sources" [{"fileName" "", "line" 29781, "character" 18}]}},
+           "_pageHref" "tabs"}]},
+        "kind" 32768,
+        "type"
+        {"type" "reflection",
+         "declaration"
+         {"id" 9395,
+          "name" "__type",
+          "kind" 65536,
+          "kindString" "Type literal",
+          "flags" {"isExternal" true},
+          "sources" [{"fileName" "", "line" 29780, "character" 43}],
+          "signatures" []}},
+        "_pageHref" "tabs"}]},
+     "kind" 32,
+     "type"
+     {"type" "reference",
+      "id" 3837,
+      "typeArguments"
+      [{"type" "reflection",
+        "declaration"
+        {"id" 9395,
+         "name" "__type",
+         "kind" 65536,
+         "kindString" "Type literal",
+         "flags" {"isExternal" true},
+         "sources" [{"fileName" "", "line" 29780, "character" 43}],
+         "signatures" []}}],
+      "qualifiedName" "chrome.events.Event",
+      "package" "chrome-types",
+      "name" "events.Event"},
+     "_comment"
+     "Fires when the active tab in a window changes. Note that the tab's URL may not be set at the time this event fired, but you can listen to onUpdated events so as to be notified when a URL is set.",
+     "comment"
+     {"shortText"
+      "Fires when the active tab in a window changes. Note that the tab's URL may not be set at the time this event fired, but you can listen to onUpdated events so as to be notified when a URL is set."},
+     "_pageHref" "tabs"}
+    ))
+
+(let [callback (first (get-in new-tab-on-activated-event ["_method" "parameters"]))
+      parameter (first (get-in callback ["_method" "parameters"]))
+      ]
+  (get parameter "kindString")
+  )
 
 ; ---- old event
 (comment
@@ -1081,10 +987,14 @@ k(comment
 (defmulti coerce-type
   "Takes in a new json type item and convert it back into the old format"
   (fn [{kind-string "kindString"
-        {type "type"} "type"}]
+        {type "type"} "type"
+        name "name"}]
     (cond (= kind-string "Function") :function
           (and (= kind-string "Variable") (= type "literal")) :property
-          (and (= kind-string "Variable") (= type "reference")) :event) ;; not sure if callback is the right lexicon. These are events. For example, onActivated
+          (and (= kind-string "Variable") (= type "reference")) :event
+          (= name "callback") :callback
+          (= kind-string "Parameter") :parameter
+          )
     ))
 
 (defmethod coerce-type :property [item]
@@ -1100,12 +1010,73 @@ k(comment
      :description description
      }))
 
+(defn _name-in-callback->id [_name]
+  (let [[prefix suffix] (clojure.string/split _name #"callback")
+        parent [(last (clojure.string/split prefix #"\."))]
+        suffix (clojure.string/split suffix #"\.")
+        ]
+    (->> (concat ["property"] parent suffix)
+         (remove #(empty? %))
+         (clojure.string/join #"-")
+         )
+    ))
+
+(defn type->simple_type [type]
+  (let [t (get type "type")
+        name (get type "name")
+        declaration (get type "declaration")]
+    (cond (and (not (nil? declaration))
+               (= "__type" (get-in declaration ["declaration" "name"])))
+          "object"
+          (= name "number") "integer"
+          (= name "string") "string"
+          (= name "any") "any"
+          (= name "boolean" "boolean")
+          :else
+          (throw (js/Error. (str "don't know what to do with" type)))
+          )
+    ))
+
+;; test
+;; (_name-in-callback->id "chrome.tabs.onActivated.callback.activeInfo")
+
+(defmethod coerce-type :parameter [item]
+  (let [name (get item "name")
+        id (_name-in-callback->id (get item "_name"))
+        simple-type (type->simple_type (get item "type"))
+        parameters (get item "parameters")
+        ;; id (->> (clojure.string/split (get item "_pageId") #"-")
+        ;;         ((juxt second last))
+        ;;         (concat ["property"])
+        ;;         (clojure.string/join #"-"))
+
+        ;; parent-name ;; do we need this?
+        ;; is_object ;; do we need this?
+        ;; last ;; do we need this?
+        ]
+    {:id id
+     :name name
+     :simple-type simple-type
+     :parameters (->> parameters
+                      (mapv coerce-type))
+     }
+
+    ))
+
 ;; TODO: to implement
 (defmethod coerce-type :callback [item]
+  (let [name (get item "name")
+        id (get item "_pageId")
+        ;; description
+        ;; callback
+        ;; availability
+        parent-name  (-> id
+                         (clojure.string/split #"-")
+                         drop-last
+                         last)
+        ]
 
-
-
-  )
+    ))
 
 (defmethod coerce-type :event [item]
   (let [name (get-name item)

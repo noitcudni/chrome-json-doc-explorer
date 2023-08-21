@@ -110,6 +110,13 @@
     ;; (get "type")
     )
 
+(->> (-> chrome-types
+         (get "tabs")
+         (get "_type")
+         (get "properties"))
+     (filter #(= "Variable" (get % "kindString")))
+     (filter #(= "onActivated" (get % "name")))
+     )
 
 (comment
   returns
