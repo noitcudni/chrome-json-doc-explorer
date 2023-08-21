@@ -972,18 +972,9 @@
       {kind-string "kindString"
        {type "type"} "type"
        name "name"} callback-data
-      my-fn (fn [{kind-string "kindString"
-                  {type "type"} "type"
-                  name "name"}]
-              (cond (= kind-string "Function") :function
-                    (and (= kind-string "Variable") (= type "literal")) :property
-                    (and (= kind-string "Variable") (= type "reference")) :event
-                    (= name "callback") :callback
-                    (= kind-string "Parameter") :parameter
-                    )
-              )
       ]
   (coerce-type callback-data)
+  ;; callback-data
   ;; (get-in callback-data ["_method" "parameters"])
   ;; (my-fn callback-data)
   )
@@ -1006,13 +997,45 @@
                       first)]
     callback))
 
+(defn type->simple_type [type]
+  (let [t (get type "type")
+        name (get type "name")
+        declaration-name (get-in type ["declaration" "name"])]
+    (cond (= "__type" declaration-name) "object"
+          (= name "number") "integer"
+          (= name "string") "string"
+          (= name "any") "any"
+          (= name "boolean" "boolean") "boolean"
+          :else
+          (str "UNKNOWN type: " type)
+          )
+    ))
+
+(defn extract-parent-from-property-name
+  "_name: example - chrome.tabs.onActivated.callback.activeInfo.tabId
+  name: example - tabId
+  returns: example - activeInfo"
+  [_name name]
+  (last (clojure.string/split (first (clojure.string/split _name (re-pattern name))) #"\."))
+  )
+
+(defn _name-in-property->id
+  "convert property's _name in the new json to the old json's property's id
+  example: _name - chrome.tabs.onActivated.callback.activeInfo.tabId, name - tabId
+  returns: example - property-activeInfo-tabId"
+  [_name name]
+  (let [parent (extract-parent-from-property-name _name name)]
+    (clojure.string/join #"-" ["property" parent name])
+    ))
+
 (defmulti coerce-type
   "Takes in a new json type item and convert it back into the old format"
   (fn [{kind-string "kindString"
         {type "type"} "type"
         name "name"}]
     (cond (= kind-string "Function") :function
-          (and (= kind-string "Variable") (= type "literal")) :property
+          (and (= kind-string "Variable") (= type "literal")) :property-with-value
+          (= kind-string "Property") :property
           (and (= kind-string "Variable") (= type "reference")) :event
           (= name "callback") :callback
           (= kind-string "Parameter") :parameter
@@ -1020,6 +1043,19 @@
     ))
 
 (defmethod coerce-type :property [item]
+  (let [name (get item "name")
+        simple-type (type->simple_type (get item "type"))
+        description (get item "_comment")
+        parent-name (extract-parent-from-property-name (get item "_name") name)
+        id (_name-in-property->id (get item "_name") name)]
+    {:description description
+     :id id
+     :name name
+     :parent-name parent-name
+     :simple-type simple-type
+     }))
+
+(defmethod coerce-type :property-with-value [item]
   (let [version (get-version item)
         id (get-id item)
         name (get-name item)
@@ -1043,20 +1079,11 @@
          )
     ))
 
-(defn type->simple_type [type]
-  (let [t (get type "type")
-        name (get type "name")
-        declaration-name (get-in type ["declaration" "name"])]
-    (cond (= "__type" declaration-name) "object"
-          (= name "number") "integer"
-          (= name "string") "string"
-          (= name "any") "any"
-          (= name "boolean" "boolean") "boolean"
-          :else
-          ;; (str "UNKNOWN type: " type)
-          type
-          )
-    ))
+;; test example
+(extract-parent-from-property-name  "chrome.tabs.onActivated.callback.activeInfo.tabId" "tabId")
+;; test example
+(_name-in-property->id "chrome.tabs.onActivated.callback.activeInfo.tabId" "tabId")
+
 
 ;; test example
 (comment
@@ -1072,11 +1099,64 @@
                        "sources" [{"fileName" "", "line" 29781, "character" 18}]}}
                      ))
 
+(let [param {"_type"
+             {"properties"
+              [{"sources" [{"fileName" "", "line" 29786, "character" 8}],
+                "_name" "chrome.tabs.onActivated.callback.activeInfo.tabId",
+                "_feature" {"channel" "stable"},
+                "id" 9399,
+                "flags" {"isExternal" true},
+                "kindString" "Property",
+                "name" "tabId",
+                "_pageId" "property-onActivated-callback-activeInfo-tabId",
+                "kind" 1024,
+                "type" {"type" "intrinsic", "name" "number"},
+                "_comment" "The ID of the tab that has become active.",
+                "comment" {"shortText" "The ID of the tab that has become active."},
+                "_pageHref" "tabs"}
+               {"sources" [{"fileName" "", "line" 29791, "character" 8}],
+                "_name" "chrome.tabs.onActivated.callback.activeInfo.windowId",
+                "_feature" {"channel" "stable"},
+                "id" 9400,
+                "flags" {"isExternal" true},
+                "kindString" "Property",
+                "name" "windowId",
+                "_pageId" "property-onActivated-callback-activeInfo-windowId",
+                "kind" 1024,
+                "type" {"type" "intrinsic", "name" "number"},
+                "_comment" "The ID of the window the active tab changed inside of.",
+                "comment"
+                {"shortText" "The ID of the window the active tab changed inside of."},
+                "_pageHref" "tabs"}]},
+             "_name" "chrome.tabs.onActivated.callback.activeInfo",
+             "_feature" {"channel" "stable"},
+             "id" 9397,
+             "flags" {"isExternal" true},
+             "kindString" "Parameter",
+             "name" "activeInfo",
+             "_pageId" "type-onActivated-callback-activeInfo",
+             "kind" 32768,
+             "type"
+             {"type" "reflection",
+              "declaration"
+              {"id" 9398,
+               "name" "__type",
+               "kind" 65536,
+               "kindString" "Type literal",
+               "flags" {"isExternal" true},
+               "children" [],
+               "groups" [{"title" "Properties", "kind" 1024, "children" [9399 9400]}],
+               "sources" [{"fileName" "", "line" 29781, "character" 18}]}},
+             "_pageHref" "tabs"}]
+  (first (get-in param ["_type" "properties"]))
+  )
+
 (defmethod coerce-type :parameter [item]
   (let [name (get item "name")
         id (_name-in-callback->id (get item "_name"))
         simple-type (type->simple_type (get item "type"))
-        parameters (get item "parameters")
+        properties (get-in item ["_type" "properties"])
+
         ;; id (->> (clojure.string/split (get item "_pageId") #"-")
         ;;         ((juxt second last))
         ;;         (concat ["property"])
@@ -1089,10 +1169,9 @@
     {:id id
      :name name
      :simple-type simple-type
-     :parameters (->> parameters
+     :parameters (->> properties
                       (mapv coerce-type))
      }
-
     ))
 
 ;; TODO: to implement
