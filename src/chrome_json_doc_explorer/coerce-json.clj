@@ -944,6 +944,258 @@
   })
 
 
+;; ---- new function ----
+(comment
+  (def new-function-data
+    {"sources" [{"fileName" "", "line" 30998, "character" 20}],
+     "_name" "chrome.tabs.captureVisibleTab",
+     "signatures" [],
+     "_feature" {"channel" "stable"},
+     "id" 9171,
+     "flags" {"isExternal" true},
+     "kindString" "Function",
+     "name" "captureVisibleTab",
+     "_pageId" "method-captureVisibleTab",
+     "_method"
+     {"parameters"
+      [{"_name" "chrome.tabs.captureVisibleTab.windowId",
+        "_feature" {"channel" "stable"},
+        "id" 9176,
+        "flags" {"isExternal" true, "isOptional" true},
+        "kindString" "Parameter",
+        "name" "windowId",
+        "_pageId" "type-captureVisibleTab-windowId",
+        "kind" 32768,
+        "type" {"type" "intrinsic", "name" "number"},
+        "_comment"
+        "The target window. Defaults to the [current window](https://developer.chrome.com/docs/extensions/reference/windows/#current-window).",
+        "comment"
+        {"shortText"
+         "The target window. Defaults to the [current window](https://developer.chrome.com/docs/extensions/reference/windows/#current-window).\n"},
+        "_pageHref" "tabs"}
+       {"_name" "chrome.tabs.captureVisibleTab.options",
+        "_feature" {"channel" "stable"},
+        "id" 9177,
+        "flags" {"isExternal" true, "isOptional" true},
+        "kindString" "Parameter",
+        "name" "options",
+        "_pageId" "type-captureVisibleTab-options",
+        "kind" 32768,
+        "type"
+        {"type" "reference",
+         "id" 4023,
+         "qualifiedName" "chrome.extensionTypes.ImageDetails",
+         "package" "chrome-types",
+         "name" "ImageDetails",
+         "_href" "../extensionTypes/#type-ImageDetails"},
+        "_pageHref" "tabs"}
+       {"_name" "chrome.tabs.captureVisibleTab.callback",
+        "_feature" {"channel" "stable"},
+        "id" 9178,
+        "flags" {"isExternal" true, "isOptional" true},
+        "kindString" "Parameter",
+        "name" "callback",
+        "_pageId" "method-captureVisibleTab-callback",
+        "_method"
+        {"parameters"
+         [{"_name" "chrome.tabs.captureVisibleTab.callback.dataUrl",
+           "_feature" {"channel" "stable"},
+           "id" 9181,
+           "flags" {"isExternal" true},
+           "kindString" "Parameter",
+           "name" "dataUrl",
+           "_pageId" "type-captureVisibleTab-callback-dataUrl",
+           "kind" 32768,
+           "type" {"type" "intrinsic", "name" "string"},
+           "_comment"
+           "A data URL that encodes an image of the visible area of the captured tab. May be assigned to the 'src' property of an HTML `img` element for display.",
+           "comment"
+           {"shortText"
+            "A data URL that encodes an image of the visible area of the captured tab. May be assigned to the 'src' property of an HTML `img` element for display.\n"},
+           "_pageHref" "tabs"}]},
+        "kind" 32768,
+        "type"
+        {"type" "reflection",
+         "declaration"
+         {"id" 9179,
+          "name" "__type",
+          "kind" 65536,
+          "kindString" "Type literal",
+          "flags" {"isExternal" true},
+          "signatures" []}},
+        "comment" {},
+        "_pageHref" "tabs"}],
+      "return"
+      {"_name" "chrome.tabs.captureVisibleTab.return",
+       "_feature" {"channel" "stable", "since" "Chrome 88"},
+       "id" -1,
+       "flags" {},
+       "name" "return",
+       "_pageId" "type-captureVisibleTab-return",
+       "kind" 32768,
+       "type"
+       {"type" "reference",
+        "typeArguments" [{"type" "intrinsic", "name" "string"}],
+        "qualifiedName" "Promise",
+        "package" "typescript",
+        "name" "Promise"},
+       "comment" {"tags" [{"tag" "since", "text" "Chrome 88"}]},
+       "_pageHref" "tabs"},
+      "isReturnsAsync" true},
+     "kind" 64,
+     "_comment"
+     "Captures the visible area of the currently active tab in the specified window. In order to call this method, the extension must have either the [<all\\_urls>](https://developer.chrome.com/docs/extensions/declare_permissions) permission or the [activeTab](https://developer.chrome.com/docs/extensions/activeTab) permission. In addition to sites that extensions can normally access, this method allows extensions to capture sensitive sites that are otherwise restricted, including chrome:-scheme pages, other extensions' pages, and data: URLs. These sensitive sites can only be captured with the activeTab permission. File URLs may be captured only if the extension has been granted file access.",
+     "comment"
+     {"shortText"
+      "Captures the visible area of the currently active tab in the specified window. In order to call this method, the extension must have either the [<all\\_urls>](https://developer.chrome.com/docs/extensions/declare_permissions) permission or the [activeTab](https://developer.chrome.com/docs/extensions/activeTab) permission. In addition to sites that extensions can normally access, this method allows extensions to capture sensitive sites that are otherwise restricted, including chrome:-scheme pages, other extensions' pages, and data: URLs. These sensitive sites can only be captured with the activeTab permission. File URLs may be captured only if the extension has been granted file access.",
+      "tags" [{"tag" "chrome-returns-extra", "text" "since Chrome 88"}]},
+     "_pageHref" "tabs"}))
+
+;; --- old function
+(comment {
+  "availability": null,
+  "callback": {
+               "name": "callback",
+               "optional": false,
+               "parameters": [
+                              {
+                               "availability": null,
+                               "description": "A data URL that encodes an image of the visible area of the captured tab. May be assigned to the 'src' property of an HTML <code>img</code> element for display.",
+                               "functions": [],
+                               "id": "property-callback-dataUrl",
+                               "is_object": false,
+                               "last": true,
+                               "name": "dataUrl",
+                               "optional": null,
+                               "parameters": [],
+                               "parentName": "callback",
+                               "properties": [],
+                               "returns": null,
+                               "simple_type": "string"
+                               }
+                              ],
+               "simple_type": {
+                               "simple_type": "function"
+                               }
+               },
+  "description": "Captures the visible area of the currently active tab in the specified window. In order to call this method, the extension must have either the <a href='declare_permissions'>&lt;all_urls&gt;</a> permission or the <a href='activeTab'>activeTab</a> permission. In addition to sites that extensions can normally access, this method allows extensions to capture sensitive sites that are otherwise restricted, including chrome:-scheme pages, other extensions' pages, and data: URLs. These sensitive sites can only be captured with the activeTab permission. File URLs may be captured only if the extension has been granted file access.",
+  "id": "method-captureVisibleTab",
+  "name": "captureVisibleTab",
+  "parameters": [
+                 {
+                  "availability": null,
+                  "description": "The target window. Defaults to the <a href='windows#current-window'>current window</a>.",
+                  "functions": [],
+                  "id": "property-captureVisibleTab-windowId",
+                  "is_object": false,
+                  "name": "windowId",
+                  "optional": true,
+                  "parameters": [],
+                  "parentName": "captureVisibleTab",
+                  "properties": [],
+                  "returns": null,
+                  "simple_type": "integer"
+                  },
+                 {
+                  "availability": null,
+                  "description": "Details about the format and quality of an image.",
+                  "functions": [],
+                  "id": "property-captureVisibleTab-options",
+                  "is_object": true,
+                  "name": "options",
+                  "optional": true,
+                  "parameters": [],
+                  "parentName": "captureVisibleTab",
+                  "properties": [
+                                 {
+                                  "availability": {
+                                                   "partial": null,
+                                                   "scheduled": null,
+                                                   "version": 39
+                                                   },
+                                  "description": "The format of the resulting image.  Default is <code>\"jpeg\"</code>.",
+                                  "enum_values": [
+                                                  {
+                                                   "description": null,
+                                                   "first": true,
+                                                   "name": "jpeg"
+                                                   },
+                                                  {
+                                                   "description": null,
+                                                   "last": true,
+                                                   "name": "png"
+                                                   }
+                                                  ],
+                                  "functions": [],
+                                  "id": "property-options-format",
+                                  "is_object": false,
+                                  "name": "format",
+                                  "optional": true,
+                                  "parameters": [],
+                                  "parentName": "options",
+                                  "properties": [],
+                                  "returns": null
+                                  },
+                                 {
+                                  "availability": {
+                                                   "partial": null,
+                                                   "scheduled": null,
+                                                   "version": 39
+                                                   },
+                                  "description": "When format is <code>\"jpeg\"</code>, controls the quality of the resulting image.  This value is ignored for PNG images.  As quality is decreased, the resulting image will have more visual artifacts, and the number of bytes needed to store it will decrease.",
+                                  "functions": [],
+                                  "id": "property-options-quality",
+                                  "is_object": false,
+                                  "name": "quality",
+                                  "optional": true,
+                                  "parameters": [],
+                                  "parentName": "options",
+                                  "properties": [],
+                                  "returns": null,
+                                  "simple_type": "integer"
+                                  }
+                                 ],
+                  "returns": null,
+                  "simple_type": "object"
+                  },
+                 {
+                  "asFunction": {
+                                 "name": "callback",
+                                 "optional": false,
+                                 "parameters": [
+                                                {
+                                                 "availability": null,
+                                                 "description": "A data URL that encodes an image of the visible area of the captured tab. May be assigned to the 'src' property of an HTML <code>img</code> element for display.",
+                                                 "functions": [],
+                                                 "id": "property-callback-dataUrl",
+                                                 "is_object": false,
+                                                 "last": true,
+                                                 "name": "dataUrl",
+                                                 "optional": null,
+                                                 "parameters": [],
+                                                 "parentName": "callback",
+                                                 "properties": [],
+                                                 "returns": null,
+                                                 "simple_type": "string"
+                                                 }
+                                                ],
+                                 "simple_type": {
+                                                 "simple_type": "function"
+                                                 }
+                                 },
+                  "description": null,
+                  "id": "property-captureVisibleTab-callback",
+                  "isCallback": true,
+                  "last": true,
+                  "name": "callback",
+                  "optional": false,
+                  "parentName": "captureVisibleTab",
+                  "simple_type": "function"
+                  }
+                 ],
+  "returns": null
+  })
+
 ;; test example
 (comment
   (let  [data {"sources" [{"fileName" "", "line" 29640, "character" 17}],
@@ -1037,14 +1289,17 @@
   "Takes in a new json type item and convert it back into the old format"
   (fn [{kind-string "kindString"
         {type "type"} "type"
-        name "name"}]
+        name "name"
+        _name "_name"
+        }]
     (cond (= kind-string "Function") :function
           (and (= kind-string "Variable") (= type "literal")) :property-with-value
           (= kind-string "Property") :property
           (and (= kind-string "Variable") (= type "reference")) :event
           (= name "callback") :callback
-          (= kind-string "Parameter") :parameter
-          )
+          (and (= kind-string "Parameter")
+               (clojure.string/includes? _name "callback")) :callback-parameter
+          (= kind-string "Parameter") :parameter)
     ))
 
 (defmethod coerce-type :property [item]
@@ -1156,7 +1411,7 @@
   (first (get-in param ["_type" "properties"]))
   )
 
-(defmethod coerce-type :parameter [item]
+(defmethod coerce-type :callback-parameter [item]
   (let [name (get item "name")
         id (_name-in-callback->id (get item "_name"))
         simple-type (type->simple_type (get item "type"))
@@ -1174,10 +1429,15 @@
     {:id id
      :name name
      :simple-type simple-type
-     :properties (->> properties
-                      (mapv coerce-type))
+     :properties (if (seq properties)
+                   (->> properties (mapv coerce-type))
+                   [])
      }
     ))
+
+(defmethod coerce-type :parameter [item]
+  :normal-parameter
+  )
 
 ;; TODO: to implement
 (defmethod coerce-type :callback [item]
@@ -1217,5 +1477,29 @@
 
 
 (defmethod coerce-type :function [item]
-  :function
+  (let [name (get-name item)
+        id (str "method-" name)
+        description (get-description item)
+        all-parameters (get-in item ["_method" "parameters"])
+        parameters (->> all-parameters
+                        (remove (fn [{name "name"}] (= name "callback"))))
+        callback (->> all-parameters
+                      (filter (fn [{name "name"}] (= name "callback")))
+                      first)
+        ]
+    #_{
+     :id id
+     :name name
+     :description description
+     }
+    ;; parameters
+    (->> parameters
+         (mapv
+          coerce-type
+          ))
+    )
+  )
+
+(let [new-data  new-function-data]
+  (coerce-type new-function-data)
   )

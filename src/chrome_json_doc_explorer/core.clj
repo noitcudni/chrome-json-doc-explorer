@@ -118,6 +118,17 @@
      (filter #(= "onActivated" (get % "name")))
      )
 
+(->> (-> chrome-types
+         (get "tabs")
+         (get "_type")
+         (get "properties"))
+     (filter #(= "Function" (get % "kindString")))
+     first
+
+     ;; (filter #(= "Variable" (get % "kindString")))
+     ;; (filter #(= "onActivated" (get % "name")))
+     )
+
 (comment
   returns
   (["MAX_CAPTURE_VISIBLE_TAB_CALLS_PER_SECOND" "literal"]
