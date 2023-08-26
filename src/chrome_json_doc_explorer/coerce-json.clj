@@ -1339,6 +1339,16 @@
          )
     ))
 
+(defn _name-in-parameter->id [_name]
+  (let [name-components (clojure.string/split _name #"\.")
+        parameter (last name-components)
+        parent (last (butlast name-components))]
+    (clojure.string/join #"-" ["property" parent parameter])
+    ))
+
+;; (_name-in-parameter->id "chrome.tabs.captureVisibleTab.windowId")
+;; "chrome.tabs.captureVisibleTab.windowId"
+
 ;; test example
 (extract-parent-from-property-name  "chrome.tabs.onActivated.callback.activeInfo.tabId" "tabId")
 ;; test example
@@ -1436,8 +1446,18 @@
     ))
 
 (defmethod coerce-type :parameter [item]
-  :normal-parameter
-  )
+  (let [name (get item "name")
+        id (_name-in-parameter->id (get item "_name"))
+        simple-type (type->simple_type (get item "type"))
+        properties (get-in item ["_type" "properties"])]
+    {:id id
+     :name name
+     :simple-type simple-type
+     :properties (if (seq properties)
+                   (->> properties (mapv coerce-type))
+                   [])
+     }
+    ))
 
 ;; TODO: to implement
 (defmethod coerce-type :callback [item]
