@@ -1262,7 +1262,8 @@
           (= name "number") "integer"
           (= name "string") "string"
           (= name "any") "any"
-          (= name "boolean" "boolean") "boolean"
+          (= name "boolean") "boolean"
+          (= t "reference") "object"
           :else
           (str "UNKNOWN type: " type)
           )
@@ -1426,6 +1427,7 @@
         id (_name-in-callback->id (get item "_name"))
         simple-type (type->simple_type (get item "type"))
         properties (get-in item ["_type" "properties"])
+        optional? (get-in item ["flags" "isOptional"])
 
         ;; id (->> (clojure.string/split (get item "_pageId") #"-")
         ;;         ((juxt second last))
@@ -1439,6 +1441,7 @@
     {:id id
      :name name
      :simple-type simple-type
+     :optional optional?
      :properties (if (seq properties)
                    (->> properties (mapv coerce-type))
                    [])
@@ -1449,15 +1452,22 @@
   (let [name (get item "name")
         id (_name-in-parameter->id (get item "_name"))
         simple-type (type->simple_type (get item "type"))
-        properties (get-in item ["_type" "properties"])]
+        properties (get item "properties")
+        optional? (get-in item ["flags" "isOptional"])
+        ]
     {:id id
      :name name
      :simple-type simple-type
+     :optional optional?
      :properties (if (seq properties)
                    (->> properties (mapv coerce-type))
                    [])
      }
     ))
+
+(->> (get-in new-function-data ["_method" "parameters"])
+     )
+
 
 ;; TODO: to implement
 (defmethod coerce-type :callback [item]
@@ -1496,6 +1506,8 @@
     ))
 
 
+;; NOTE: don't need to go into all the gory details about a reference type.
+;; Just say that its an object seems to be enough
 (defmethod coerce-type :function [item]
   (let [name (get-name item)
         id (str "method-" name)
@@ -1507,16 +1519,12 @@
                       (filter (fn [{name "name"}] (= name "callback")))
                       first)
         ]
-    #_{
+    {
      :id id
      :name name
      :description description
+     :parameters (->> parameters (mapv coerce-type))
      }
-    ;; parameters
-    (->> parameters
-         (mapv
-          coerce-type
-          ))
     )
   )
 

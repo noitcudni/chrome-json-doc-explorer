@@ -129,6 +129,16 @@
      ;; (filter #(= "onActivated" (get % "name")))
      )
 
+;; extensionTypes/references
+(->> (-> chrome-types
+     (get "extensionTypes")
+     (get-in ["_type" "properties"])
+     )
+     (filter (fn [x]
+               (= "ImageDetails" (get x "name"))
+               )))
+
+
 (comment
   returns
   (["MAX_CAPTURE_VISIBLE_TAB_CALLS_PER_SECOND" "literal"]
