@@ -1472,8 +1472,8 @@
 (defmethod coerce-type :callback [item]
   (let [name (get item "name")
         id (get item "_pageId")
+        description (get-description item)
         ;; description
-        ;; callback
         ;; availability
         parent-name  (-> id
                          (clojure.string/split #"-")
@@ -1485,6 +1485,7 @@
      :parent-name parent-name
      :parameters (->> parameters
                       (mapv coerce-type))
+     :description description
      }
     ))
 
@@ -1517,13 +1518,19 @@
         callback (->> all-parameters
                       (filter (fn [{name "name"}] (= name "callback")))
                       first)
+        ;; parameters (if (nil? callback) parameters
+        ;;                (conj parameters {:is-callback true})
+        ;;                )
         ]
     {
      :id id
      :name name
      :description description
-     :parameters (->> parameters (mapv coerce-type))
-     :callack (coerce-type callback)
+     ;; NOTE: seems all the downstream cares about is :name and is-callback for the callback map in :parameters
+     :parameters (conj (->> parameters (mapv coerce-type))
+                       {:name "callback"
+                        :is-callback true})
+     :callback (coerce-type callback)
      }
     )
   )
