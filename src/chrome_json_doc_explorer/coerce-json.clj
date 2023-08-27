@@ -1469,7 +1469,6 @@
      )
 
 
-;; TODO: to implement
 (defmethod coerce-type :callback [item]
   (let [name (get item "name")
         id (get item "_pageId")
@@ -1524,6 +1523,7 @@
      :name name
      :description description
      :parameters (->> parameters (mapv coerce-type))
+     :callack (coerce-type callback)
      }
     )
   )
