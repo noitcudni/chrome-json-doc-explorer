@@ -1,5 +1,7 @@
 (ns chrome-json-doc-explorer.coerce-json
-  (:require [clojure.data.json :as json])
+  (:require [clojure.data.json :as json]
+            [chrome-json-doc-explorer.core :refer [chrome-types]]
+            )
   )
 
 
@@ -1518,23 +1520,60 @@
         callback (->> all-parameters
                       (filter (fn [{name "name"}] (= name "callback")))
                       first)
-        ;; parameters (if (nil? callback) parameters
-        ;;                (conj parameters {:is-callback true})
-        ;;                )
         ]
-    {
-     :id id
-     :name name
-     :description description
-     ;; NOTE: seems all the downstream cares about is :name and is-callback for the callback map in :parameters
-     :parameters (conj (->> parameters (mapv coerce-type))
-                       {:name "callback"
-                        :is-callback true})
-     :callback (coerce-type callback)
-     }
-    )
-  )
+    (merge {:id id
+            :name name
+            :description description
+            ;; NOTE: seems all the downstream cares about is :name and is-callback for the callback map in :parameters
+            :parameters (->> (conj (->> parameters (mapv coerce-type))
+                                   (when callback {:name "callback"
+                                                   :is-callback true}))
+                             (remove nil?)
+                             (into [])
+                             )}
+           (when callback
+             {:callback (coerce-type callback)}
+             ))
+    ))
+
 
 (let [new-data  new-function-data]
   (coerce-type new-function-data)
+  )
+
+#_(-> chrome-types
+    (get "tabs")
+    (get "_type")
+    (get "properties")
+    (nth 0)
+
+    ;; keys
+    ;; (get "_feature")
+    ;; (get "groups")
+    ;; (get "_pageHref")
+
+    )
+
+(let [new-data (->> (-> chrome-types
+                        (get "tabs")
+                        (get "_type")
+                        (get "properties"))
+                    (filter #(= "Function" (get % "kindString")))
+                    second
+                    )]
+  (coerce-type new-data)
+  #_((fn [{kind-string "kindString"
+         {type "type"} "type"
+         name "name"
+         _name "_name"
+         }]
+     (cond (= kind-string "Function") :function
+           (and (= kind-string "Variable") (= type "literal")) :property-with-value
+           (= kind-string "Property") :property
+           (and (= kind-string "Variable") (= type "reference")) :event
+           (= name "callback") :callback
+           (and (= kind-string "Parameter")
+                (clojure.string/includes? _name "callback")) :callback-parameter
+           (= kind-string "Parameter") :parameter)
+     ) new-data)
   )
