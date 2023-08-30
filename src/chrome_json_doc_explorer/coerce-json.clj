@@ -1260,14 +1260,19 @@
   (let [t (get type "type")
         name (get type "name")
         declaration-name (get-in type ["declaration" "name"])
-        elem-type (get-in type ["elementType" "name"])]
+        _ (prn ">> " type)
+        elem-ref (if (= "reference" (get-in type ["elementType" "type"]))
+                   (clojure.string/join #"."
+                                        (rest (clojure.string/split
+                                               (get-in type ["elementType" "qualifiedName"]) #"\.")))
+                   (get-in type ["elementType" "name"]))]
     (cond (= "__type" declaration-name) "object"
           (= name "number") "integer"
           (= name "string") "string"
           (= name "any") "any"
           (= name "boolean") "boolean"
           (= t "reference") "object"
-          (= t "array") (str "[" (str "array-of-" elem-type) "]")
+          (= t "array") (str "[" (str "array-of-" elem-ref "s") "]")
           :else
           (str "UNKNOWN type: " type)
           )
@@ -1573,7 +1578,7 @@
                          (get "_type")
                          (get "properties"))
                         (filter #(= "Function" (get % "kindString"))))
-                   (nth 6)
+                   (nth 8)
                    )]
   (coerce-type new-data)
   #_((fn [{kind-string "kindString"

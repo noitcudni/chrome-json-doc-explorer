@@ -222,7 +222,7 @@
          (get "extensions/tabs")
          (get "functions"))
      (filter (fn [x]
-               (= "executeScript" (get x "name"))
+               (= "getAllInWindow" (get x "name"))
                ))
      first
      )
