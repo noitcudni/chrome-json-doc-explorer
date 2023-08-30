@@ -5,3 +5,5 @@
 (deftest a-test
   (testing "FIXME, I fail."
     (is (= 1 1))))
+
+;; TODO start adding unit tests. Start with functions first
