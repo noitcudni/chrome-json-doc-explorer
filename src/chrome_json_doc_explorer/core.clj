@@ -209,18 +209,7 @@
 
 (-> (->> (-> old-apis
              (get "extensions/tabs")
-             (get "functions")
-             ;; keys
-             ;; second
-             ;; keys
-             ;; keys
-             ;; (get "getCurrent")
-             ;; second
-             ;; (get "byName")
-             ;; (get "getCurrent")
-             ;; (get "get")
-             ;; (get "types")
-             )
+             (get "functions"))
          (filter (fn [x]
                    (= "connect" (get x "name"))
                    ))
@@ -228,6 +217,15 @@
          )
     (get "returns")
     )
+
+(->> (-> old-apis
+         (get "extensions/tabs")
+         (get "functions"))
+     (filter (fn [x]
+               (= "executeScript" (get x "name"))
+               ))
+     first
+     )
 
 ;; grab all the returns from all the ns/functions
 (->> old-apis
