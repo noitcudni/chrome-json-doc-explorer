@@ -1,6 +1,6 @@
 (ns chrome-json-doc-explorer.coerce-json
   (:require [clojure.data.json :as json]
-            [chrome-json-doc-explorer.core :refer [chrome-types]]
+            [chrome-json-doc-explorer.core :refer [chrome-types old-apis]]
             )
   )
 
@@ -1271,6 +1271,16 @@
           )
     ))
 
+(defn return-type [return-type-data]
+  (let [t (get-in return-type-data ["type" "type"])
+        name (get-in return-type-data ["type" "name"])
+        name (cond (and (= t "reference") (= name "Promise")) nil
+                   (= t "reference") name
+                   )
+        ]
+    (when name
+      {:link {:ref name}})))
+
 (defn extract-parent-from-property-name
   "_name: example - chrome.tabs.onActivated.callback.activeInfo.tabId
   name: example - tabId
@@ -1520,6 +1530,7 @@
         callback (->> all-parameters
                       (filter (fn [{name "name"}] (= name "callback")))
                       first)
+        return (return-type (get-in item ["_method" "return"]))
         ]
     (merge {:id id
             :name name
@@ -1530,7 +1541,8 @@
                                                    :is-callback true}))
                              (remove nil?)
                              (into [])
-                             )}
+                             )
+            :returns return}
            (when callback
              {:callback (coerce-type callback)}
              ))
