@@ -1249,6 +1249,13 @@
 
 (defn get-description [{description "_comment"}] description)
 
+(defn get-deprecrated-text [comment-tags]
+  (-> (->> comment-tags
+           (filter (fn [{tag "tag" :as all}] (= tag "deprecated")))
+           first
+           )
+      (get "text")))
+
 (defn get-event-callback [item]
   (let [params (get-in item ["_method" "parameters"])
         callback (->> params
@@ -1533,6 +1540,7 @@
   (let [name (get-name item)
         id (str "method-" name)
         description (get-description item)
+        deprecated-text (get-deprecrated-text (-> item (get "comment") (get "tags")))
         all-parameters (get-in item ["_method" "parameters"])
         parameters (->> all-parameters
                         (remove (fn [{name "name"}] (= name "callback"))))
@@ -1544,6 +1552,7 @@
     (merge {:id id
             :name name
             :description description
+            :deprecated deprecated-text
             ;; NOTE: seems all the downstream cares about is :name and is-callback for the callback map in :parameters
             :parameters (->> (conj (->> parameters (mapv coerce-type))
                                    (when callback {:name "callback"
@@ -1580,9 +1589,10 @@
                          (get "_type")
                          (get "properties"))
                         (filter #(= "Function" (get % "kindString"))))
-                   (nth 9) ;; up to 9
+                   (nth 8) ;; up to 9
                    )]
   (coerce-type new-data)
+
   #_((fn [{kind-string "kindString"
          {type "type"} "type"
          name "name"

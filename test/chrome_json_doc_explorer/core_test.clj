@@ -62,6 +62,7 @@
         (is (= new-json {:id "method-getAllInWindow",
                          :name "getAllInWindow",
                          :description "Gets details about all tabs in the specified window.",
+                         :deprecated "Please use {@link tabs.query} `{windowId: windowId}`.",
                          :parameters
                          [{:id "property-getAllInWindow-windowId",
                            :name "windowId",
@@ -83,12 +84,22 @@
                           :description nil}}))
         ))
     (testing "build-api-table-function"
-      (let [chromex-api (build-api-table-function {:subns "ext" :ns-name ""} (coerce-type tabs-getAllInWindow-fixture))]
+      (let [chromex-api (build-api-table-function {:subns "ext" :ns-name ""} (coerce-type tabs-getAllInWindow-fixture))
+            ;; NOTE: missing :since
+            ;; {:id ::get-all-in-window,
+            ;;  :name "getAllInWindow",
+            ;;  :since "36",
+            ;;  :deprecated "Please use 'tabs.query' {windowId: windowId}.",
+            ;;  :callback? true,
+            ;;  :params
+            ;;  [{:name "window-id", :optional? true, :type "integer"}
+            ;;   {:name "callback", :type :callback, :callback {:params [{:name "tabs", :type "[array-of-tabs.Tabs]"}]}}]}
+            ]
         (is (= chromex-api {:id :get-all-in-window,
                             :name "getAllInWindow",
                             :since nil,
                             :until nil,
-                            :deprecated nil,
+                            :deprecated "Please use {@link tabs.query} `{windowId: windowId}`.",
                             :callback? true,
                             :return-type nil,
                             :params
