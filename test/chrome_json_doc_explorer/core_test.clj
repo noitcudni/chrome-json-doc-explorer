@@ -1,6 +1,8 @@
 (ns chrome-json-doc-explorer.core-test
   (:require [clojure.test :refer :all]
-            [chrome-json-doc-explorer.fixtures :refer [tabs-getCurrent-fixture]]
+            [chrome-json-doc-explorer.fixtures :refer [tabs-getCurrent-fixture
+                                                       tabs-getAllInWindow-fixture
+                                                       ]]
             [chrome-json-doc-explorer.core :refer :all]
             [chrome-json-doc-explorer.coerce-json :refer [coerce-type]]
             [api-gen.generator :refer [build-api-table-function]]
@@ -53,4 +55,54 @@
         (is (= "tab" (:name (first (:params (:callback (first params)))))))
         (is (= "tabs.Tab" (:type (first (:params (:callback (first params)))))))
         )
-      )))
+      ))
+  (testing "tabs-getAllInWindow-windowId"
+    (testing "coerce-type"
+      (let [new-json (coerce-type tabs-getAllInWindow-fixture)]
+        (is (= new-json {:id "method-getAllInWindow",
+                         :name "getAllInWindow",
+                         :description "Gets details about all tabs in the specified window.",
+                         :parameters
+                         [{:id "property-getAllInWindow-windowId",
+                           :name "windowId",
+                           :simple-type "integer",
+                           :optional true,
+                           :properties []}
+                          {:name "callback", :is-callback true}],
+                         :returns nil,
+                         :callback
+                         {:name "callback",
+                          :id "method-getAllInWindow-callback",
+                          :parent-name "getAllInWindow",
+                          :parameters
+                          [{:id "property-getAllInWindow-tabs",
+                            :name "tabs",
+                            :simple-type "[array-of-tabs.Tabs]",
+                            :optional nil,
+                            :properties []}],
+                          :description nil}}))
+        ))
+    (testing "build-api-table-function"
+      (let [chromex-api (build-api-table-function {:subns "ext" :ns-name ""} (coerce-type tabs-getAllInWindow-fixture))]
+        (is (= chromex-api {:id :get-all-in-window,
+                            :name "getAllInWindow",
+                            :since nil,
+                            :until nil,
+                            :deprecated nil,
+                            :callback? true,
+                            :return-type nil,
+                            :params
+                            [{:name "window-id", :optional? true, :since nil, :type "integer"}
+                             {:name "callback",
+                              :optional? nil,
+                              :since nil,
+                              :type :callback,
+                              :callback
+                              {:params
+                               [{:name "tabs",
+                                 :optional? nil,
+                                 :since nil,
+                                 :type "[array-of-tabs.Tabs]"}]}}]}))
+        )))
+
+  )
