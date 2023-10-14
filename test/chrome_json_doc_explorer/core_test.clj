@@ -3,6 +3,7 @@
             [chrome-json-doc-explorer.fixtures :refer [tabs-getCurrent-fixture
                                                        tabs-getAllInWindow-fixture
                                                        tabs-get-fixture
+                                                       tabs-executeScript
                                                        ]]
             [chrome-json-doc-explorer.core :refer :all]
             [chrome-json-doc-explorer.coerce-json :refer [coerce-type]]
@@ -10,6 +11,62 @@
             ))
 
 (deftest coerce-functions
+  (testing "tabs-executeScript"
+    (testing "coerce-type"
+      (let [new-json (coerce-type tabs-executeScript)]
+        (is (= new-json {:id "method-executeScript",
+                         :name "executeScript",
+                         :description
+                         "Injects JavaScript code into a page. For details, see the [programmatic injection](https://developer.chrome.com/docs/extensions/content_scripts#pi) section of the content scripts doc.",
+                         :deprecated "Replaced by {@link scripting.executeScript} in Manifest V3.",
+                         :parameters
+                         [{:id "property-executeScript-tabId",
+                           :name "tabId",
+                           :simple-type "integer",
+                           :optional true,
+                           :properties []}
+                          {:id "property-executeScript-details",
+                           :name "details",
+                           :simple-type "extensionTypes.InjectDetails",
+                           :optional nil,
+                           :properties []}
+                          {:name "callback", :is-callback true}],
+                         :returns nil,
+                         :callback
+                         {:name "callback",
+                          :id "method-executeScript-callback",
+                          :parent-name "executeScript",
+                          :parameters
+                          [{:id "property-executeScript-result",
+                            :name "result",
+                            :simple-type "[array-of-anys]",
+                            :optional true,
+                            :properties []}],
+                          :description nil}}))))
+    (testing "build-api-table-function"
+      (let [chrome-api (build-api-table-function {:subns "ext" :ns-name ""} (coerce-type tabs-executeScript))]
+        (is (= chrome-api {:id :execute-script,
+                           :name "executeScript",
+                           :since nil,
+                           :until nil,
+                           :deprecated "Replaced by {@link scripting.executeScript} in Manifest V3.",
+                           :callback? true,
+                           :return-type nil,
+                           :params
+                           [{:name "tab-id", :optional? true, :since nil, :type "integer"}
+                            {:name "details",
+                             :optional? nil,
+                             :since nil,
+                             :type "extensionTypes.InjectDetails"}
+                            {:name "callback",
+                             :optional? nil,
+                             :since nil,
+                             :type :callback,
+                             :callback
+                             {:params
+                              [{:name "result", :optional? true, :since nil, :type "[array-of-anys]"}]}}]})))
+      ))
+
   (testing "tabs-getCurrent"
     (testing "coerce-type"
       (let [new-json (coerce-type tabs-getCurrent-fixture)
@@ -23,7 +80,7 @@
           (is (= "tab" (:name (first (:parameters callback)))))
           (is (= "tabs.Tab" (:simple-type (first (:parameters callback)))))
           )))
-    (testing "build-api-table-funcion"
+    (testing "build-api-table-function"
       (let [{id :id
              name :name
              callback? :callback?
@@ -155,5 +212,9 @@
   )
 
 #_(let [new-json (coerce-type tabs-get-fixture)]
+  (build-api-table-function {:subns "ext" :ns-name ""} new-json)
+  )
+
+(let [new-json (coerce-type tabs-executeScript)]
   (build-api-table-function {:subns "ext" :ns-name ""} new-json)
   )
