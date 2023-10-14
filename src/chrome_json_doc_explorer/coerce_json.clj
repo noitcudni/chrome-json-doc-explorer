@@ -1256,6 +1256,12 @@
            )
       (get "text")))
 
+(defn get-since [comment-tags]
+  (-> (->> comment-tags
+           (filter (fn [{tag "since" :as all}]))
+           ))
+  )
+
 (defn get-event-callback [item]
   (let [params (get-in item ["_method" "parameters"])
         callback (->> params
@@ -1584,27 +1590,39 @@
 
     )
 
-#_(let [new-data (-> (->> (-> chrome-types
-                         (get "tabs")
-                         (get "_type")
-                         (get "properties"))
+
+;; This is how you get the new json format
+(coerce-type
+ (-> (->> (-> chrome-types
+              (get "tabs")
+              (get "_type")
+              (get "properties"))
+          (filter #(= "Function" (get % "kindString"))))
+     (nth 7) ;; up to 9
+     ))
+
+
+(let [new-data (-> (->> (-> chrome-types
+                            (get "tabs")
+                            (get "_type")
+                            (get "properties"))
                         (filter #(= "Function" (get % "kindString"))))
-                   (nth 8) ;; up to 9
+                   (nth 7) ;; up to 9
                    )]
   (coerce-type new-data)
 
   #_((fn [{kind-string "kindString"
-         {type "type"} "type"
-         name "name"
-         _name "_name"
-         }]
-     (cond (= kind-string "Function") :function
-           (and (= kind-string "Variable") (= type "literal")) :property-with-value
-           (= kind-string "Property") :property
-           (and (= kind-string "Variable") (= type "reference")) :event
-           (= name "callback") :callback
-           (and (= kind-string "Parameter")
-                (clojure.string/includes? _name "callback")) :callback-parameter
-           (= kind-string "Parameter") :parameter)
-     ) new-data)
+           {type "type"} "type"
+           name "name"
+           _name "_name"
+           }]
+       (cond (= kind-string "Function") :function
+             (and (= kind-string "Variable") (= type "literal")) :property-with-value
+             (= kind-string "Property") :property
+             (and (= kind-string "Variable") (= type "reference")) :event
+             (= name "callback") :callback
+             (and (= kind-string "Parameter")
+                  (clojure.string/includes? _name "callback")) :callback-parameter
+             (= kind-string "Parameter") :parameter)
+       ) new-data)
   )

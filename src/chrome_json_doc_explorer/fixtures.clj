@@ -1,5 +1,94 @@
 (ns chrome-json-doc-explorer.fixtures)
 
+(def tabs-get-fixture
+  {"sources" [{"fileName" "", "line" 29908, "character" 20}],
+   "_name" "chrome.tabs.get",
+   "signatures" [],
+   "_feature" {"channel" "stable"},
+   "id" 8875,
+   "flags" {"isExternal" true},
+   "kindString" "Function",
+   "name" "get",
+   "_pageId" "method-get",
+   "_method"
+   {"parameters"
+    [{"_name" "chrome.tabs.get.tabId",
+      "_feature" {"channel" "stable"},
+      "id" 8877,
+      "flags" {"isExternal" true},
+      "kindString" "Parameter",
+      "name" "tabId",
+      "_pageId" "type-get-tabId",
+      "kind" 32768,
+      "type" {"type" "intrinsic", "name" "number"},
+      "_pageHref" "tabs"}
+     {"_name" "chrome.tabs.get.callback",
+      "_feature" {"channel" "stable"},
+      "id" 8880,
+      "flags" {"isExternal" true, "isOptional" true},
+      "kindString" "Parameter",
+      "name" "callback",
+      "_pageId" "method-get-callback",
+      "_method"
+      {"parameters"
+       [{"_name" "chrome.tabs.get.callback.tab",
+         "_feature" {"channel" "stable"},
+         "id" 8883,
+         "flags" {"isExternal" true},
+         "kindString" "Parameter",
+         "name" "tab",
+         "_pageId" "type-get-callback-tab",
+         "kind" 32768,
+         "type"
+         {"type" "reference",
+          "id" 9318,
+          "qualifiedName" "chrome.tabs.Tab",
+          "package" "chrome-types",
+          "name" "Tab",
+          "_href" "#type-Tab"},
+         "_pageHref" "tabs"}]},
+      "kind" 32768,
+      "type"
+      {"type" "reflection",
+       "declaration"
+       {"id" 8881,
+        "name" "__type",
+        "kind" 65536,
+        "kindString" "Type literal",
+        "flags" {"isExternal" true},
+        "signatures" []}},
+      "_pageHref" "tabs"}],
+    "return"
+    {"_name" "chrome.tabs.get.return",
+     "_feature" {"channel" "stable", "since" "Chrome 88"},
+     "id" -1,
+     "flags" {},
+     "name" "return",
+     "_pageId" "type-get-return",
+     "kind" 32768,
+     "type"
+     {"type" "reference",
+      "typeArguments"
+      [{"type" "reference",
+        "id" 9318,
+        "qualifiedName" "chrome.tabs.Tab",
+        "package" "chrome-types",
+        "name" "Tab",
+        "_href" "#type-Tab"}],
+      "qualifiedName" "Promise",
+      "package" "typescript",
+      "name" "Promise"},
+     "comment" {"tags" [{"tag" "since", "text" "Chrome 88"}]},
+     "_pageHref" "tabs"},
+    "isReturnsAsync" true},
+   "kind" 64,
+   "_comment" "Retrieves details about the specified tab.",
+   "comment"
+   {"shortText" "Retrieves details about the specified tab.",
+    "tags" [{"tag" "chrome-returns-extra", "text" "since Chrome 88\n"}]},
+   "_pageHref" "tabs"}
+  )
+
 (def tabs-getAllInWindow-fixture
   {"sources" [{"fileName" "", "line" 30107, "character" 20}],
    "_name" "chrome.tabs.getAllInWindow",
