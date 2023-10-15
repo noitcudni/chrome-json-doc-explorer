@@ -8,9 +8,70 @@
             [chrome-json-doc-explorer.core :refer :all]
             [chrome-json-doc-explorer.coerce-json :refer [coerce-type]]
             [api-gen.generator :refer [build-api-table-function]]
+            [clojure.java.io :as io]
+            [clojure.data.json :as json]
             ))
 
+(def chromes-types (json/read-str (slurp (io/resource "chrome-types.json"))))
+
+(defn get-chrome-types-data [pos]
+  (-> (->> (-> chrome-types
+               (get "tabs")
+               (get "_type")
+               (get "properties"))
+           (filter #(= "Function" (get % "kindString"))))
+      (nth pos)))
+
 (deftest coerce-functions
+  (testing "tabs-duplicate"
+    (let [new-tabs-duplicate (get-chrome-types-data 5)]
+     (testing "coerce-type"
+       (let [new-json (coerce-type new-tabs-duplicate)]
+         (= new-json {:id "method-duplicate",
+                      :name "duplicate",
+                      :description "Duplicates a tab.",
+                      :deprecated nil,
+                      :parameters
+                      [{:id "property-duplicate-tabId",
+                        :name "tabId",
+                        :simple-type "integer",
+                        :optional nil,
+                        :properties []}
+                       {:name "callback", :is-callback true}],
+                      :returns nil,
+                      :callback
+                      {:name "callback",
+                       :id "method-duplicate-callback",
+                       :parent-name "duplicate",
+                       :parameters
+                       [{:id "property-duplicate-tab",
+                         :name "tab",
+                         :simple-type "tabs.Tab",
+                         :optional true,
+                         :properties []}],
+                       :description nil}}
+            )))
+     (testing "build-api-table-function"
+       (let [chrome-api (build-api-table-function {:subns "ext" :ns-name ""} (coerce-type new-tabs-duplicate))]
+         (is (= chrome-api {:id :duplicate,
+                            :name "duplicate",
+                            :since nil,
+                            :until nil,
+                            :deprecated nil,
+                            :callback? true,
+                            :return-type nil,
+                            :params
+                            [{:name "tab-id", :optional? nil, :since nil, :type "integer"}
+                             {:name "callback",
+                              :optional? nil,
+                              :since nil,
+                              :type :callback,
+                              :callback
+                              {:params [{:name "tab", :optional? true, :since nil, :type "tabs.Tab"}]}}]}))
+         ))
+     ))
+
+
   (testing "tabs-executeScript"
     (testing "coerce-type"
       (let [new-json (coerce-type tabs-executeScript)]
@@ -206,6 +267,30 @@
 
   )
 
+(build-api-table-function {:subns "ext" :ns-name ""}
+                          (coerce-type (-> (->> (-> chrome-types
+                                                    (get "tabs")
+                                                    (get "_type")
+                                                    (get "properties"))
+                                                (filter #(= "Function" (get % "kindString"))))
+                                           (nth 5) ;; up to 9
+                                           )))
+(coerce-type (-> (->> (-> chrome-types
+                          (get "tabs")
+                          (get "_type")
+                          (get "properties"))
+                      (filter #(= "Function" (get % "kindString"))))
+                 (nth 5) ;; up to 9
+                 ))
+
+;; (-> (->> (-> chrome-types
+;;              (get "tabs")
+;;              (get "_type")
+;;              (get "properties"))
+;;          (filter #(= "Function" (get % "kindString"))))
+;;     (nth 6) ;; up to 9
+;;     )
+
 
 #_(let [new-json (coerce-type tabs-getAllInWindow-fixture)]
   (build-api-table-function {:subns "ext" :ns-name ""} new-json)
@@ -215,6 +300,6 @@
   (build-api-table-function {:subns "ext" :ns-name ""} new-json)
   )
 
-(let [new-json (coerce-type tabs-executeScript)]
+#_(let [new-json (coerce-type tabs-executeScript)]
   (build-api-table-function {:subns "ext" :ns-name ""} new-json)
   )
