@@ -1513,12 +1513,15 @@
                          (clojure.string/split #"-")
                          drop-last
                          last)
-        parameters (get-in item ["_method" "parameters"])]
+        parameters (get-in item ["_method" "parameters"])
+        optional? (get-in item ["flags" "isOptional"])
+        ]
     {:name name
      :id id
      :parent-name parent-name
      :parameters (->> parameters
                       (mapv coerce-type))
+     :optional optional?
      :description description
      }
     ))
@@ -1562,7 +1565,9 @@
             ;; NOTE: seems all the downstream cares about is :name and is-callback for the callback map in :parameters
             :parameters (->> (conj (->> parameters (mapv coerce-type))
                                    (when callback {:name "callback"
-                                                   :is-callback true}))
+                                                   :is-callback true
+                                                   :optional (get-in callback ["flags" "isOptional"])
+                                                   }))
                              (remove nil?)
                              (into [])
                              )
@@ -1592,22 +1597,30 @@
 
 
 ;; This is how you get the new json format
-(coerce-type
- (-> (->> (-> chrome-types
-              (get "tabs")
-              (get "_type")
-              (get "properties"))
-          (filter #(= "Function" (get % "kindString"))))
-     (nth 7) ;; up to 9
-     ))
+;; 6 -> executeScript
+#_(-> (->> (-> chrome-types
+             (get "tabs")
+             (get "_type")
+             (get "properties"))
+         (filter #(= "Function" (get % "kindString"))))
+    (nth 5) ;; up to 9
+    )
+
+#_(coerce-type (-> (->> (-> chrome-types
+                          (get "tabs")
+                          (get "_type")
+                          (get "properties"))
+                      (filter #(= "Function" (get % "kindString"))))
+                 (nth 6) ;; up to 9
+                 ))
 
 
-(let [new-data (-> (->> (-> chrome-types
+#_(let [new-data (-> (->> (-> chrome-types
                             (get "tabs")
                             (get "_type")
                             (get "properties"))
                         (filter #(= "Function" (get % "kindString"))))
-                   (nth 7) ;; up to 9
+                   (nth 6) ;; up to 9
                    )]
   (coerce-type new-data)
 

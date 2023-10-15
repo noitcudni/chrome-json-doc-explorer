@@ -22,56 +22,58 @@
            (filter #(= "Function" (get % "kindString"))))
       (nth pos)))
 
-(deftest coerce-functions
+;;;;;; coerce-functions
+(deftest test-tabs-duplicate
   (testing "tabs-duplicate"
     (let [new-tabs-duplicate (get-chrome-types-data 5)]
-     (testing "coerce-type"
-       (let [new-json (coerce-type new-tabs-duplicate)]
-         (= new-json {:id "method-duplicate",
-                      :name "duplicate",
-                      :description "Duplicates a tab.",
-                      :deprecated nil,
-                      :parameters
-                      [{:id "property-duplicate-tabId",
-                        :name "tabId",
-                        :simple-type "integer",
-                        :optional nil,
-                        :properties []}
-                       {:name "callback", :is-callback true}],
-                      :returns nil,
-                      :callback
-                      {:name "callback",
-                       :id "method-duplicate-callback",
-                       :parent-name "duplicate",
-                       :parameters
-                       [{:id "property-duplicate-tab",
-                         :name "tab",
-                         :simple-type "tabs.Tab",
-                         :optional true,
-                         :properties []}],
-                       :description nil}}
-            )))
-     (testing "build-api-table-function"
-       (let [chrome-api (build-api-table-function {:subns "ext" :ns-name ""} (coerce-type new-tabs-duplicate))]
-         (is (= chrome-api {:id :duplicate,
-                            :name "duplicate",
-                            :since nil,
-                            :until nil,
-                            :deprecated nil,
-                            :callback? true,
-                            :return-type nil,
-                            :params
-                            [{:name "tab-id", :optional? nil, :since nil, :type "integer"}
-                             {:name "callback",
-                              :optional? nil,
-                              :since nil,
-                              :type :callback,
-                              :callback
-                              {:params [{:name "tab", :optional? true, :since nil, :type "tabs.Tab"}]}}]}))
-         ))
-     ))
+      (testing "coerce-type"
+        (let [new-json (coerce-type new-tabs-duplicate)]
+          (is (= new-json {:id "method-duplicate",
+                        :name "duplicate",
+                        :description "Duplicates a tab.",
+                        :deprecated nil,
+                        :parameters
+                        [{:id "property-duplicate-tabId",
+                          :name "tabId",
+                          :simple-type "integer",
+                          :optional nil,
+                          :properties []}
+                         {:name "callback", :is-callback true :optional true}],
+                        :returns nil,
+                        :callback
+                        {:name "callback",
+                         :id "method-duplicate-callback",
+                         :parent-name "duplicate",
+                         :parameters
+                         [{:id "property-duplicate-tab",
+                           :name "tab",
+                           :simple-type "tabs.Tab",
+                           :optional true,
+                           :properties []}],
+                         :optional true
+                         :description nil}}
+              ))))
+      (testing "build-api-table-function"
+        (let [chrome-api (build-api-table-function {:subns "ext" :ns-name ""} (coerce-type new-tabs-duplicate))]
+          (is (= chrome-api {:id :duplicate,
+                             :name "duplicate",
+                             :since nil,
+                             :until nil,
+                             :deprecated nil,
+                             :callback? true,
+                             :return-type nil,
+                             :params
+                             [{:name "tab-id", :optional? nil, :since nil, :type "integer"}
+                              {:name "callback",
+                               :optional? true,
+                               :since nil,
+                               :type :callback,
+                               :callback
+                               {:params [{:name "tab", :optional? true, :since nil, :type "tabs.Tab"}]}}]}))
+          ))
+      )))
 
-
+(deftest test-tabs-executeScript
   (testing "tabs-executeScript"
     (testing "coerce-type"
       (let [new-json (coerce-type tabs-executeScript)]
@@ -91,7 +93,7 @@
                            :simple-type "extensionTypes.InjectDetails",
                            :optional nil,
                            :properties []}
-                          {:name "callback", :is-callback true}],
+                          {:name "callback", :is-callback true, :optional true}],
                          :returns nil,
                          :callback
                          {:name "callback",
@@ -103,7 +105,9 @@
                             :simple-type "[array-of-anys]",
                             :optional true,
                             :properties []}],
-                          :description nil}}))))
+                          :optional true,
+                          :description nil}}
+               ))))
     (testing "build-api-table-function"
       (let [chrome-api (build-api-table-function {:subns "ext" :ns-name ""} (coerce-type tabs-executeScript))]
         (is (= chrome-api {:id :execute-script,
@@ -120,20 +124,134 @@
                              :since nil,
                              :type "extensionTypes.InjectDetails"}
                             {:name "callback",
-                             :optional? nil,
+                             :optional? true,
                              :since nil,
                              :type :callback,
                              :callback
                              {:params
-                              [{:name "result", :optional? true, :since nil, :type "[array-of-anys]"}]}}]})))
-      ))
+                              [{:name "result", :optional? true, :since nil, :type "[array-of-anys]"}]}}]}
+               )))
+      )))
 
+(deftest test-tabs-get
+  (testing "tabs-get"
+    (testing "coerce-type"
+      (let [new-json (coerce-type tabs-get-fixture)]
+        (is (= new-json {:id "method-get",
+                         :name "get",
+                         :description "Retrieves details about the specified tab.",
+                         :deprecated nil,
+                         :parameters
+                         [{:id "property-get-tabId",
+                           :name "tabId",
+                           :simple-type "integer",
+                           :optional nil,
+                           :properties []}
+                          {:name "callback", :is-callback true, :optional true}],
+                         :returns nil,
+                         :callback
+                         {:name "callback",
+                          :id "method-get-callback",
+                          :parent-name "get",
+                          :parameters
+                          [{:id "property-get-tab",
+                            :name "tab",
+                            :simple-type "tabs.Tab",
+                            :optional nil,
+                            :properties []}],
+                          :optional true,
+                          :description nil}}))))
+    (testing "build-api-table-function"
+      (let [chromex-api (build-api-table-function {:subns "ext" :ns-name ""} (coerce-type tabs-get-fixture))]
+        (is (= chromex-api {:id :get,
+                            :name "get",
+                            :since nil,
+                            :until nil,
+                            :deprecated nil,
+                            :callback? true,
+                            :return-type nil,
+                            :params
+                            [{:name "tab-id", :optional? nil, :since nil, :type "integer"}
+                             {:name "callback",
+                              :optional? true,
+                              :since nil,
+                              :type :callback,
+                              :callback
+                              {:params [{:name "tab", :optional? nil, :since nil, :type "tabs.Tab"}]}}]}))
+        ))))
+
+
+(deftest tabs-getAllInWindow-test
+ (testing "tabs-getAllInWindow"
+   (testing "coerce-type"
+     (let [new-json (coerce-type tabs-getAllInWindow-fixture)]
+       (is (= new-json {:id "method-getAllInWindow",
+                        :name "getAllInWindow",
+                        :description "Gets details about all tabs in the specified window.",
+                        :deprecated "Please use {@link tabs.query} `{windowId: windowId}`.",
+                        :parameters
+                        [{:id "property-getAllInWindow-windowId",
+                          :name "windowId",
+                          :simple-type "integer",
+                          :optional true,
+                          :properties []}
+                         {:name "callback", :is-callback true, :optional true}],
+                        :returns nil,
+                        :callback
+                        {:name "callback",
+                         :id "method-getAllInWindow-callback",
+                         :parent-name "getAllInWindow",
+                         :parameters
+                         [{:id "property-getAllInWindow-tabs",
+                           :name "tabs",
+                           :simple-type "[array-of-tabs.Tabs]",
+                           :optional nil,
+                           :properties []}],
+                         :optional true,
+                         :description nil}}))
+       ))
+   (testing "build-api-table-function"
+     (let [chromex-api (build-api-table-function {:subns "ext" :ns-name ""} (coerce-type tabs-getAllInWindow-fixture))
+           ;; NOTE: missing :since
+           ;; {:id ::get-all-in-window,
+           ;;  :name "getAllInWindow",
+           ;;  :since "36",
+           ;;  :deprecated "Please use 'tabs.query' {windowId: windowId}.",
+           ;;  :callback? true,
+           ;;  :params
+           ;;  [{:name "window-id", :optional? true, :type "integer"}
+           ;;   {:name "callback", :type :callback, :callback {:params [{:name "tabs", :type "[array-of-tabs.Tabs]"}]}}]}
+           ]
+       (is (= chromex-api {:id :get-all-in-window,
+                           :name "getAllInWindow",
+                           :since nil,
+                           :until nil,
+                           :deprecated "Please use {@link tabs.query} `{windowId: windowId}`.",
+                           :callback? true,
+                           :return-type nil,
+                           :params
+                           [{:name "window-id", :optional? true, :since nil, :type "integer"}
+                            {:name "callback",
+                             :optional? true,
+                             :since nil,
+                             :type :callback,
+                             :callback
+                             {:params
+                              [{:name "tabs",
+                                :optional? nil,
+                                :since nil,
+                                :type "[array-of-tabs.Tabs]"}]}}]}))
+       ))))
+
+(coerce-type tabs-getCurrent-fixture)
+
+(deftest coerce-functions
   (testing "tabs-getCurrent"
     (testing "coerce-type"
       (let [new-json (coerce-type tabs-getCurrent-fixture)
             callback (:callback new-json)]
         (is (= "getCurrent" (:name new-json)))
-        (is (= [{:name "callback", :is-callback true}] (:parameters new-json)))
+        (is (= [{:name "callback", :is-callback true :optional true}] (:parameters new-json)))
         (testing "callback-item"
           (is (= "callback" (:name callback)))
           (is (= "method-getCurrent-callback" (:id callback)))
@@ -158,148 +276,28 @@
         (is (= "tabs.Tab" (:type (first (:params (:callback (first params)))))))
         )
       ))
-
-  (testing "tabs-get"
-    (testing "coerce-type"
-      (let [new-json (coerce-type tabs-get-fixture)]
-        (is (= new-json {:id "method-get",
-                         :name "get",
-                         :description "Retrieves details about the specified tab.",
-                         :deprecated nil,
-                         :parameters
-                         [{:id "property-get-tabId",
-                           :name "tabId",
-                           :simple-type "integer",
-                           :optional nil,
-                           :properties []}
-                          {:name "callback", :is-callback true}],
-                         :returns nil,
-                         :callback
-                         {:name "callback",
-                          :id "method-get-callback",
-                          :parent-name "get",
-                          :parameters
-                          [{:id "property-get-tab",
-                            :name "tab",
-                            :simple-type "tabs.Tab",
-                            :optional nil,
-                            :properties []}],
-                          :description nil}}))))
-    (testing "build-api-table-function"
-      (let [chromex-api (build-api-table-function {:subns "ext" :ns-name ""} (coerce-type tabs-get-fixture))]
-        (is (= chromex-api {:id :get,
-                            :name "get",
-                            :since nil,
-                            :until nil,
-                            :deprecated nil,
-                            :callback? true,
-                            :return-type nil,
-                            :params
-                            [{:name "tab-id", :optional? nil, :since nil, :type "integer"}
-                             {:name "callback",
-                              :optional? nil,
-                              :since nil,
-                              :type :callback,
-                              :callback
-                              {:params [{:name "tab", :optional? nil, :since nil, :type "tabs.Tab"}]}}]}))
-        )))
-
-  (testing "tabs-getAllInWindow"
-    (testing "coerce-type"
-      (let [new-json (coerce-type tabs-getAllInWindow-fixture)]
-        (is (= new-json {:id "method-getAllInWindow",
-                         :name "getAllInWindow",
-                         :description "Gets details about all tabs in the specified window.",
-                         :deprecated "Please use {@link tabs.query} `{windowId: windowId}`.",
-                         :parameters
-                         [{:id "property-getAllInWindow-windowId",
-                           :name "windowId",
-                           :simple-type "integer",
-                           :optional true,
-                           :properties []}
-                          {:name "callback", :is-callback true}],
-                         :returns nil,
-                         :callback
-                         {:name "callback",
-                          :id "method-getAllInWindow-callback",
-                          :parent-name "getAllInWindow",
-                          :parameters
-                          [{:id "property-getAllInWindow-tabs",
-                            :name "tabs",
-                            :simple-type "[array-of-tabs.Tabs]",
-                            :optional nil,
-                            :properties []}],
-                          :description nil}}))
-        ))
-    (testing "build-api-table-function"
-      (let [chromex-api (build-api-table-function {:subns "ext" :ns-name ""} (coerce-type tabs-getAllInWindow-fixture))
-            ;; NOTE: missing :since
-            ;; {:id ::get-all-in-window,
-            ;;  :name "getAllInWindow",
-            ;;  :since "36",
-            ;;  :deprecated "Please use 'tabs.query' {windowId: windowId}.",
-            ;;  :callback? true,
-            ;;  :params
-            ;;  [{:name "window-id", :optional? true, :type "integer"}
-            ;;   {:name "callback", :type :callback, :callback {:params [{:name "tabs", :type "[array-of-tabs.Tabs]"}]}}]}
-            ]
-        (is (= chromex-api {:id :get-all-in-window,
-                            :name "getAllInWindow",
-                            :since nil,
-                            :until nil,
-                            :deprecated "Please use {@link tabs.query} `{windowId: windowId}`.",
-                            :callback? true,
-                            :return-type nil,
-                            :params
-                            [{:name "window-id", :optional? true, :since nil, :type "integer"}
-                             {:name "callback",
-                              :optional? nil,
-                              :since nil,
-                              :type :callback,
-                              :callback
-                              {:params
-                               [{:name "tabs",
-                                 :optional? nil,
-                                 :since nil,
-                                 :type "[array-of-tabs.Tabs]"}]}}]}))
-        )))
-
-
   )
 
-(build-api-table-function {:subns "ext" :ns-name ""}
-                          (coerce-type (-> (->> (-> chrome-types
-                                                    (get "tabs")
-                                                    (get "_type")
-                                                    (get "properties"))
-                                                (filter #(= "Function" (get % "kindString"))))
-                                           (nth 5) ;; up to 9
-                                           )))
-(coerce-type (-> (->> (-> chrome-types
-                          (get "tabs")
-                          (get "_type")
-                          (get "properties"))
-                      (filter #(= "Function" (get % "kindString"))))
-                 (nth 5) ;; up to 9
-                 ))
+;; (build-api-table-function {:subns "ext" :ns-name ""}
+;;                           (coerce-type (-> (->> (-> chrome-types
+;;                                                     (get "tabs")
+;;                                                     (get "_type")
+;;                                                     (get "properties"))
+;;                                                 (filter #(= "Function" (get % "kindString"))))
+;;                                            (nth 5) ;; up to 9
+;;                                            )))
+;; (coerce-type (-> (->> (-> chrome-types
+;;                           (get "tabs")
+;;                           (get "_type")
+;;                           (get "properties"))
+;;                       (filter #(= "Function" (get % "kindString"))))
+;;                  (nth 5) ;; up to 9
+;;                  ))
 
-;; (-> (->> (-> chrome-types
-;;              (get "tabs")
-;;              (get "_type")
-;;              (get "properties"))
-;;          (filter #(= "Function" (get % "kindString"))))
-;;     (nth 6) ;; up to 9
-;;     )
+;; (coerce-type (get-chrome-types-data 4)) ;;discard
+;; (build-api-table-function {:subns "ext" :ns-name ""} (coerce-type (get-chrome-types-data 4)))
 
-
-#_(let [new-json (coerce-type tabs-getAllInWindow-fixture)]
-  (build-api-table-function {:subns "ext" :ns-name ""} new-json)
-  )
-
-#_(let [new-json (coerce-type tabs-get-fixture)]
-  (build-api-table-function {:subns "ext" :ns-name ""} new-json)
-  )
-
-#_(let [new-json (coerce-type tabs-executeScript)]
-  (build-api-table-function {:subns "ext" :ns-name ""} new-json)
-  )
+;; (get-chrome-types-data 3) ;;detectLanguage
+;; (get-chrome-types-data 2) ;; create
+;; (get-chrome-types-data 1) ;; connect
+;; (get-chrome-types-data 0) ;; captureVisibleTab
