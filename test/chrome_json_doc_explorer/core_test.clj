@@ -22,6 +22,59 @@
            (filter #(= "Function" (get % "kindString"))))
       (nth pos)))
 
+(coerce-type (get-chrome-types-data 4))
+(build-api-table-function {:subns "ext" :ns-name ""} (coerce-type (get-chrome-types-data 4)))
+
+(deftest test-tabs-discard
+  (testing "tabs-discard"
+    (let [new-tabs-discard (get-chrome-types-data 4)]
+      (testing "coerce-type"
+        (let [new-json (coerce-type new-tabs-discard)]
+          (is (= new-json {:id "method-discard",
+                           :name "discard",
+                           :description
+                           "Discards a tab from memory. Discarded tabs are still visible on the tab strip and are reloaded when activated.",
+                           :deprecated nil,
+                           :parameters
+                           [{:id "property-discard-tabId",
+                             :name "tabId",
+                             :simple-type "integer",
+                             :optional true,
+                             :properties []}
+                            {:name "callback", :is-callback true, :optional true}],
+                           :returns nil,
+                           :callback
+                           {:name "callback",
+                            :id "method-discard-callback",
+                            :parent-name "discard",
+                            :parameters
+                            [{:id "property-discard-tab",
+                              :name "tab",
+                              :simple-type "tabs.Tab",
+                              :optional true,
+                              :properties []}],
+                            :optional true,
+                            :description nil}}))))
+      (testing "build-api-table-function"
+        (is (= (build-api-table-function {:subns "ext" :ns-name ""} (coerce-type new-tabs-discard))
+               {:id :discard,
+                :name "discard",
+                :since nil,
+                :until nil,
+                :deprecated nil,
+                :callback? true,
+                :return-type nil,
+                :params
+                [{:name "tab-id", :optional? true, :since nil, :type "integer"}
+                 {:name "callback",
+                  :optional? true,
+                  :since nil,
+                  :type :callback,
+                  :callback
+                  {:params [{:name "tab", :optional? true, :since nil, :type "tabs.Tab"}]}}]}))
+        ))))
+
+
 ;;;;;; coerce-functions
 (deftest test-tabs-duplicate
   (testing "tabs-duplicate"
