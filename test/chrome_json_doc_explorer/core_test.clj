@@ -22,8 +22,121 @@
            (filter #(= "Function" (get % "kindString"))))
       (nth pos)))
 
-(coerce-type (get-chrome-types-data 4))
-(build-api-table-function {:subns "ext" :ns-name ""} (coerce-type (get-chrome-types-data 4)))
+(coerce-type (get-chrome-types-data 2))
+(build-api-table-function {:subns "ext" :ns-name ""} (coerce-type (get-chrome-types-data 2)))
+
+(defmacro gen-test [pos-in-json expected-old-json expected-api-table-entry]
+ `(let [new-json-data# (get-chrome-types-data ~pos-in-json)]
+    (testing "coerce-type"
+      (let [old-json# (coerce-type new-json-data#)]
+        (is (= old-json#
+               ~expected-old-json))))
+    (testing "build-api-table-function"
+      (is (= (build-api-table-function {:subns "ext" :ns-name ""} (coerce-type (get-chrome-types-data ~pos-in-json)))
+             ~expected-api-table-entry
+             )))
+    ))
+
+(deftest test-tabs-create
+  (gen-test 2
+            ;; old-json
+            {:id "method-create",
+             :name "create",
+             :description "Creates a new tab.",
+             :deprecated nil,
+             :parameters
+             [{:id "property-create-createProperties",
+               :name "createProperties",
+               :simple-type "object",
+               :optional nil,
+               :properties []}
+              {:name "callback", :is-callback true, :optional true}],
+             :returns nil,
+             :callback
+             {:name "callback",
+              :id "method-create-callback",
+              :parent-name "create",
+              :parameters
+              [{:id "property-create-tab",
+                :name "tab",
+                :simple-type "tabs.Tab",
+                :optional nil,
+                :properties []}],
+              :optional true,
+              :description nil}}
+            ;; build-api
+            {:id :create,
+             :name "create",
+             :since nil,
+             :until nil,
+             :deprecated nil,
+             :callback? true,
+             :return-type nil,
+             :params
+             [{:name "create-properties", :optional? nil, :since nil, :type "object"}
+              {:name "callback",
+               :optional? true,
+               :since nil,
+               :type :callback,
+               :callback
+               {:params [{:name "tab", :optional? nil, :since nil, :type "tabs.Tab"}]}}]}
+            ))
+
+;; (deftest test-tabs-create
+;;   (testing "tabs-create"
+;;     (let [n] (get-chrome-types-data 2))
+;;     )
+;;   )
+
+(deftest test-tabs-detectLanguage
+  (testing "tabs-detectLanguage"
+    (let [new-tabs-detectLanguage (get-chrome-types-data 3)]
+      (testing "coerce-type"
+        (let [new-json (coerce-type new-tabs-detectLanguage)]
+          (is (= new-json
+                 {:id "method-detectLanguage",
+                  :name "detectLanguage",
+                  :description "Detects the primary language of the content in a tab.",
+                  :deprecated nil,
+                  :parameters
+                  [{:id "property-detectLanguage-tabId",
+                    :name "tabId",
+                    :simple-type "integer",
+                    :optional true,
+                    :properties []}
+                   {:name "callback", :is-callback true, :optional true}],
+                  :returns nil,
+                  :callback
+                  {:name "callback",
+                   :id "method-detectLanguage-callback",
+                   :parent-name "detectLanguage",
+                   :parameters
+                   [{:id "property-detectLanguage-language",
+                     :name "language",
+                     :simple-type "string",
+                     :optional nil,
+                     :properties []}],
+                   :optional true,
+                   :description nil}}))))
+      (testing "build-api-table-function"
+        (is (= (build-api-table-function {:subns "ext" :ns-name ""} (coerce-type new-tabs-detectLanguage))
+               {:id :detect-language,
+                :name "detectLanguage",
+                :since nil,
+                :until nil,
+                :deprecated nil,
+                :callback? true,
+                :return-type nil,
+                :params
+                [{:name "tab-id", :optional? true, :since nil, :type "integer"}
+                 {:name "callback",
+                  :optional? true,
+                  :since nil,
+                  :type :callback,
+                  :callback
+                  {:params [{:name "language", :optional? nil, :since nil, :type "string"}]}}]}
+               ))
+        ))))
 
 (deftest test-tabs-discard
   (testing "tabs-discard"
